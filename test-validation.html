@@ -1,0 +1,122 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Validation Formulaire</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; }
+        input, select { 
+            padding: 8px; 
+            width: 300px; 
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input:invalid, select:invalid {
+            border-color: red;
+        }
+        button {
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .error { color: red; font-size: 12px; margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Test Validation HTML5</h1>
+    
+    <form id="testForm">
+        <div class="form-group">
+            <label for="test-date">Date (doit être aujourd'hui ou après):</label>
+            <input type="date" id="test-date" required 
+                   min="@((Get-Date).ToString('yyyy-MM-dd'))">
+            <div class="error" id="date-error"></div>
+        </div>
+        
+        <div class="form-group">
+            <label for="test-guests">Nombre d'invités (1-10):</label>
+            <input type="number" id="test-guests" required 
+                   min="1" max="10" value="1">
+            <div class="error" id="guests-error"></div>
+        </div>
+        
+        <button type="submit" id="submit-btn">Tester la validation</button>
+    </form>
+    
+    <script>
+        document.getElementById('testForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const dateInput = document.getElementById('test-date');
+            const guestsInput = document.getElementById('test-guests');
+            let isValid = true;
+            
+            // Réinitialiser les erreurs
+            document.getElementById('date-error').textContent = '';
+            document.getElementById('guests-error').textContent = '';
+            
+            // Validation date
+            if (!dateInput.value) {
+                document.getElementById('date-error').textContent = 'La date est requise';
+                isValid = false;
+            } else {
+                const selectedDate = new Date(dateInput.value);
+                const today = new Date();
+                today.setHours(0,0,0,0);
+                
+                if (selectedDate < today) {
+                    document.getElementById('date-error').textContent = 'La date doit être aujourd\'hui ou après';
+                    isValid = false;
+                }
+            }
+            
+            // Validation guests
+            if (!guestsInput.value) {
+                document.getElementById('guests-error').textContent = 'Le nombre d\'invités est requis';
+                isValid = false;
+            } else if (guestsInput.value < 1 || guestsInput.value > 10) {
+                document.getElementById('guests-error').textContent = 'Doit être entre 1 et 10';
+                isValid = false;
+            }
+            
+            if (isValid) {
+                alert('✅ Formulaire valide !');
+            } else {
+                alert('❌ Veuillez corriger les erreurs');
+            }
+        });
+        
+        // Désactiver le bouton si formulaire invalide
+        function updateSubmitButton() {
+            const form = document.getElementById('testForm');
+            const button = document.getElementById('submit-btn');
+            button.disabled = !form.checkValidity();
+        }
+        
+        // Écouter les changements
+        document.getElementById('test-date').addEventListener('change', updateSubmitButton);
+        document.getElementById('test-guests').addEventListener('input', updateSubmitButton);
+        
+        // Initialiser
+        updateSubmitButton();
+    </script>
+    
+    <h3>Tests à effectuer :</h3>
+    <ol>
+        <li>Essayer de soumettre sans date → doit échouer</li>
+        <li>Mettre une date passée → doit échouer</li>
+        <li>Mettre 0 invités → doit échouer</li>
+        <li>Mettre 11 invités → doit échouer</li>
+        <li>Remplir correctement → doit réussir</li>
+        <li>Bouton doit être désactivé quand invalide</li>
+    </ol>
+</body>
+</html>

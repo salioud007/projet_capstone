@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Test API Little Lemon</title>
+</head>
+<body>
+    <h1>Test de l'API</h1>
+    
+    <script src="https://raw.githubusercontent.com/courseraap/capstone/main/api.js"></script>
+    
+    <script>
+        console.log('=== TEST API ===');
+        
+        // Test fetchAPI
+        if (typeof window.fetchAPI === 'function') {
+            const today = new Date().toISOString().split('T')[0];
+            const times = window.fetchAPI(today);
+            console.log('fetchAPI(' + today + '):', times);
+        } else {
+            console.log('❌ fetchAPI pas disponible');
+        }
+        
+        // Test submitAPI
+        if (typeof window.submitAPI === 'function') {
+            console.log('✅ submitAPI disponible');
+        } else {
+            console.log('❌ submitAPI pas disponible');
+        }
+    </script>
+</body>
+</html>

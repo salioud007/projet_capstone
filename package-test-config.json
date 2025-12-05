@@ -1,0 +1,9 @@
+﻿// package.json - ajouter cette section "scripts" si elle n'existe pas
+{
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  }
+}
